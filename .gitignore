@@ -1,0 +1,5 @@
+# generated when the case is run
+cavity/[1-9]*/
+cavity/0.[0-9]*/
+cavity/constant/polyMesh/
+cavity/log.*
