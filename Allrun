@@ -1,0 +1,16 @@
+#!/bin/sh
+# Test script: meshes, checks and runs the icoFoam cavity case,
+# then prints a short summary of the run.
+cd "${0%/*}/cavity" || exit
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions
+
+runApplication blockMesh
+runApplication checkMesh
+runApplication icoFoam
+
+echo
+echo "Cells:          $(grep -m1 '^ *cells:' log.checkMesh | awk '{print $2}')"
+echo "Mesh check:     $(grep -q 'Mesh OK.' log.checkMesh && echo OK || echo FAILED)"
+echo "Time steps:     $(grep -c '^Time = ' log.icoFoam)"
+echo "Max Courant:    $(grep 'Courant Number' log.icoFoam | tail -1 | awk '{print $NF}')"
+echo "Written times:  $(foamListTimes -noZero | tr '\n' ' ')"
